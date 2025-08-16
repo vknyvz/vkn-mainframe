@@ -1,0 +1,111 @@
+services:
+  # www.vknyvz.com
+  vknyvz-web:
+    build:
+      context: ../apps/vknyvz
+      dockerfile: vknyvz-web/Dockerfile.prod
+    container_name: vknyvz-web
+    ports:
+      - "127.0.0.1:3000:3000"
+    env_file:
+      - ../apps/vknyvz/.env.production
+    restart: unless-stopped
+    networks:
+      - vknyvz-net
+    depends_on:
+      - vknyvz-api
+    profiles:
+      - vknyvz
+      - all
+
+  # api.vknyvz.com
+  vknyvz-api:
+    build:
+      context: ../apps/vknyvz
+      dockerfile: vknyvz-api/Dockerfile.prod
+    container_name: vknyvz-api
+    ports:
+      - "127.0.0.1:5000:5000"
+    env_file:
+      - ../apps/vknyvz/.env.production
+    restart: unless-stopped
+    networks:
+      - vknyvz-net
+    profiles:
+      - vknyvz
+      - all
+
+  # volkanagram.vknyvz.com
+  volkanagram-web:
+    build:
+      context: ../apps/volkanagram
+      dockerfile: volkanagram-web/Dockerfile.prod
+    container_name: volkanagram-web
+    ports:
+      - "127.0.0.1:3001:3000"
+    env_file:
+      - ../apps/volkanagram/.env.production
+    restart: unless-stopped
+    networks:
+      - vknyvz-net
+    depends_on:
+      - volkanagram-api
+    profiles:
+      - volkanagram
+      - all
+
+  # api-volkanagram.vknyvz.com
+  volkanagram-api:
+    build:
+      context: ../apps/volkanagram
+      dockerfile: volkanagram-api/Dockerfile.prod
+    container_name: volkanagram-api
+    ports:
+      - "127.0.0.1:5001:5000"
+    env_file:
+      - ../apps/volkanagram/.env.production
+    restart: unless-stopped
+    networks:
+      - vknyvz-net
+    profiles:
+      - volkanagram
+      - all
+
+  # nginx
+  nginx:
+    image: nginx:alpine
+    container_name: vknmainframe-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    restart: unless-stopped
+    networks:
+      - vknyvz-net
+    profiles:
+      - infrastructure
+      - all    
+
+  # mongo
+  mongo:
+    image: mongo:7
+    container_name: vknmainframe-mongo
+    restart: always
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - vknyvz-net
+    profiles:
+      - infrastructure
+      - all
+
+volumes:
+  mongo_data:
+
+networks:
+  vknyvz-net:
+    driver: bridge
