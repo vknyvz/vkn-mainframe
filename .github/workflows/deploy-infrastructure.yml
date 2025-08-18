@@ -21,6 +21,7 @@ jobs:
 
           docker-compose -f docker-compose.multi.yml --profile infrastructure down
           docker container prune -f
+          docker builder prune -a -f
           docker-compose -f docker-compose.multi.yml --profile infrastructure up -d
           
           docker system prune -f
