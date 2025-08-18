@@ -56,6 +56,7 @@ services:
 
   # api-volkanagram.vknyvz.com
   volkanagram-api:
+    user: "1000:1000"
     build:
       context: ../apps/volkanagram
       dockerfile: volkanagram-api/Dockerfile.prod
