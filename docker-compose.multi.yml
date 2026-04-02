@@ -73,6 +73,23 @@ services:
       - volkanagram
       - all
 
+  # rd-istudio.com
+  rd-istudio-web:
+    build:
+      context: ../apps/rd-istudio
+      dockerfile: Dockerfile.prod
+    container_name: rd-istudio-web
+    ports:
+      - "127.0.0.1:3002:3000"
+    env_file:
+      - ../apps/rd-istudio/.env.production
+    restart: unless-stopped
+    networks:
+      - vknyvz-net
+    profiles:
+      - rd-istudio
+      - all
+
   # nginx
   nginx:
     image: nginx:alpine
