@@ -90,6 +90,20 @@ services:
       - rd-istudio
       - all
 
+  jenniferyavuz-web:
+    build:
+      context: ../apps/jenniferyavuz
+      dockerfile: Dockerfile.prod
+    container_name: jenniferyavuz-web
+    ports:
+      - "127.0.0.1:3003:3000"
+    restart: unless-stopped
+    networks:
+      - vknyvz-net
+    profiles:
+      - jenniferyavuz
+      - all    
+
   # nginx
   nginx:
     image: nginx:alpine
