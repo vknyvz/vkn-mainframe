@@ -96,7 +96,7 @@ services:
       dockerfile: Dockerfile.prod
     container_name: jenniferyavuz-web
     ports:
-      - "127.0.0.1:3003:3000"
+      - "127.0.0.1:3003:80"
     restart: unless-stopped
     networks:
       - vknyvz-net
